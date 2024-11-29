@@ -136,18 +136,19 @@ UNNEST(hits.product) as product
 <div id='cau6'/>
   
 ## 6. Ask questions and solve it
-**6.1 calculate total visits, pageview, transaction, and revenue for Jan, Feb, and March 2017**
+**6.1 alculate total visit, pageview, transaction for Jan, Feb and March 2017**
 
 ~~~~sql
    SELECT 
-    FORMAT_DATE("%Y%m",PARSE_DATE("%Y%m%d",date)) month_extract
+    FORMAT_DATE("%Y%m",PARSE_DATE("%Y%m%d",date)) month
     ,SUM(totals.visits) visits
     ,SUM(totals.pageviews) pageviews
     ,SUM(totals.transactions) transactions
     ,ROUND(SUM(totals.totalTransactionRevenue)/POW(10,6),2) revenue
    FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`
    WHERE _table_suffix BETWEEN '0101' AND '0331'
-   GROUP BY month_extract
+   GROUP BY month
+   ORDER BY month;
 ~~~~
 
 | month  | visits | pageviews | transactions | revenue   |
@@ -180,548 +181,192 @@ GROUP BY trafficSource.source
 ORDER BY total_visits DESC;
 
 ~~~~
-| source                      | total_visits | total_no_of_bounces | bounce_rate |
-|-----------------------------|--------------|---------------------|-------------|
-| google                      | 38400        | 19798               | 51.56       |
-| (direct)                    | 19891        | 8606                | 43.27       |
-| youtube.com                 | 6351         | 4238                | 66.73       |
-| analytics.google.com        | 1972         | 1064                | 53.96       |
-| Partners                    | 1788         | 936                 | 52.35       |
-| m.facebook.com              | 669          | 430                 | 64.28       |
-| google.com                  | 368          | 183                 | 49.73       |
-| dfa                         | 302          | 124                 | 41.06       |
-| sites.google.com            | 230          | 97                  | 42.17       |
-| facebook.com                | 191          | 102                 | 53.4        |
-| reddit.com                  | 189          | 54                  | 28.57       |
-| qiita.com                   | 146          | 72                  | 49.32       |
-| baidu                       | 140          | 84                  | 60          |
-| quora.com                   | 140          | 70                  | 50          |
-| bing                        | 111          | 54                  | 48.65       |
-| mail.google.com             | 101          | 25                  | 24.75       |
-| yahoo                       | 100          | 41                  | 41          |
-| blog.golang.org             | 65           | 19                  | 29.23       |
-| l.facebook.com              | 51           | 45                  | 88.24       |
-| groups.google.com           | 50           | 22                  | 44          |
-| t.co                        | 38           | 27                  | 71.05       |
-| google.co.jp                | 36           | 25                  | 69.44       |
-| m.youtube.com               | 34           | 22                  | 64.71       |
-| dealspotr.com               | 26           | 12                  | 46.15       |
-| productforums.google.com    | 25           | 21                  | 84          |
-| ask                         | 24           | 16                  | 66.67       |
-| support.google.com          | 24           | 16                  | 66.67       |
-| int.search.tb.ask.com       | 23           | 17                  | 73.91       |
-| optimize.google.com         | 21           | 10                  | 47.62       |
-| docs.google.com             | 20           | 8                   | 40          |
-| lm.facebook.com             | 18           | 9                   | 50          |
-| l.messenger.com             | 17           | 6                   | 35.29       |
-| adwords.google.com          | 16           | 7                   | 43.75       |
-| duckduckgo.com              | 16           | 14                  | 87.5        |
-| google.co.uk                | 15           | 7                   | 46.67       |
-| sashihara.jp                | 14           | 8                   | 57.14       |
-| lunametrics.com             | 13           | 8                   | 61.54       |
-| search.mysearch.com         | 12           | 11                  | 91.67       |
-| tw.search.yahoo.com         | 10           | 8                   | 80          |
-| outlook.live.com            | 10           | 7                   | 70          |
-| phandroid.com               | 9            | 7                   | 77.78       |
-| connect.googleforwork.com   | 8            | 5                   | 62.5        |
-| plus.google.com             | 8            | 2                   | 25          |
-| m.yz.sm.cn                  | 7            | 5                   | 71.43       |
-| google.co.in                | 6            | 3                   | 50          |
-| search.xfinity.com          | 6            | 6                   | 100         |
-| google.ru                   | 5            | 1                   | 20          |
-| online-metrics.com          | 5            | 2                   | 40          |
-| hangouts.google.com         | 5            | 1                   | 20          |
-| s0.2mdn.net                 | 5            | 3                   | 60          |
-| m.sogou.com                 | 4            | 3                   | 75          |
-| in.search.yahoo.com         | 4            | 2                   | 50          |
-| googleads.g.doubleclick.net | 4            | 1                   | 25          |
-| away.vk.com                 | 4            | 3                   | 75          |
-| getpocket.com               | 3            |                     |             |
-| m.baidu.com                 | 3            | 2                   | 66.67       |
-| siliconvalley.about.com     | 3            | 2                   | 66.67       |
-| msn.com                     | 2            | 1                   | 50          |
-| google.it                   | 2            | 1                   | 50          |
-| google.co.th                | 2            | 1                   | 50          |
-| wap.sogou.com               | 2            | 2                   | 100         |
-| calendar.google.com         | 2            | 1                   | 50          |
-| github.com                  | 2            | 2                   | 100         |
-| plus.url.google.com         | 2            |                     |             |
-| myactivity.google.com       | 2            | 1                   | 50          |
-| centrum.cz                  | 2            | 2                   | 100         |
-| search.1and1.com            | 2            | 2                   | 100         |
-| uk.search.yahoo.com         | 2            | 1                   | 50          |
-| au.search.yahoo.com         | 2            | 2                   | 100         |
-| m.sp.sm.cn                  | 2            | 2                   | 100         |
-| google.cl                   | 2            | 1                   | 50          |
-| moodle.aurora.edu           | 2            | 2                   | 100         |
-| amp.reddit.com              | 2            | 1                   | 50          |
-| newclasses.nyu.edu          | 1            |                     |             |
-| google.es                   | 1            | 1                   | 100         |
-| google.ca                   | 1            |                     |             |
-| malaysia.search.yahoo.com   | 1            | 1                   | 100         |
-| kidrex.org                  | 1            | 1                   | 100         |
-| gophergala.com              | 1            | 1                   | 100         |
-| aol                         | 1            |                     |             |
-| google.nl                   | 1            |                     |             |
-| kik.com                     | 1            | 1                   | 100         |
-| earth.google.com            | 1            |                     |             |
-| ph.search.yahoo.com         | 1            |                     |             |
-| web.mail.comcast.net        | 1            | 1                   | 100         |
-| google.bg                   | 1            | 1                   | 100         |
-| news.ycombinator.com        | 1            | 1                   | 100         |
-| es.search.yahoo.com         | 1            | 1                   | 100         |
-| it.pinterest.com            | 1            | 1                   | 100         |
-| mx.search.yahoo.com         | 1            | 1                   | 100         |
-| images.google.com.au        | 1            | 1                   | 100         |
-| search.tb.ask.com           | 1            |                     |             |
-| arstechnica.com             | 1            |                     |             |
-| web.facebook.com            | 1            | 1                   | 100         |
-| online.fullsail.edu         | 1            | 1                   | 100         |
-| google.com.br               | 1            |                     |             |
-| suche.t-online.de           | 1            | 1                   | 100         |
-
+|source                     |total_visits|total_no_of_bounces|bounce_rate|
+|---------------------------|------------|-------------------|-----------|
+|google                     |38400       |19798              |51.56      |
+|(direct)                   |19891       |8606               |43.27      |
+|youtube.com                |6351        |4238               |66.73      |
+|analytics.google.com       |1972        |1064               |53.96      |
+|Partners                   |1788        |936                |52.35      |
+|m.facebook.com             |669         |430                |64.28      |
+|google.com                 |368         |183                |49.73      |
+|dfa                        |302         |124                |41.06      |
+|sites.google.com           |230         |97                 |42.17      |
+|facebook.com               |191         |102                |53.4       |
+|reddit.com                 |189         |54                 |28.57      |
+|qiita.com                  |146         |72                 |49.32      |
+|baidu                      |140         |84                 |60.0       |
+|quora.com                  |140         |70                 |50.0       |
+|bing                       |111         |54                 |48.65      |
+|mail.google.com            |101         |25                 |24.75      |
+|yahoo                      |100         |41                 |41.0       |
+|blog.golang.org            |65          |19                 |29.23      |
+|l.facebook.com             |51          |45                 |88.24      |
+|groups.google.com          |50          |22                 |44.0       |
+|t.co                       |38          |27                 |71.05      |
+|google.co.jp               |36          |25                 |69.44      |
+|m.youtube.com              |34          |22                 |64.71      |
+|dealspotr.com              |26          |12                 |46.15      |
+|productforums.google.com   |25          |21                 |84.0       |
+|ask                        |24          |16                 |66.67      |
+|support.google.com         |24          |16                 |66.67      |
+|int.search.tb.ask.com      |23          |17                 |73.91      |
+|optimize.google.com        |21          |10                 |47.62      |
+|docs.google.com            |20          |8                  |40.0       |
+|lm.facebook.com            |18          |9                  |50.0       |
+|l.messenger.com            |17          |6                  |35.29      |
+|adwords.google.com         |16          |7                  |43.75      |
+|duckduckgo.com             |16          |14                 |87.5       |
+|google.co.uk               |15          |7                  |46.67      |
+|sashihara.jp               |14          |8                  |57.14      |
+|lunametrics.com            |13          |8                  |61.54      |
+|search.mysearch.com        |12          |11                 |91.67      |
+|outlook.live.com           |10          |7                  |70.0       |
+|tw.search.yahoo.com        |10          |8                  |80.0       |
+|phandroid.com              |9           |7                  |77.78      |
+|plus.google.com            |8           |2                  |25.0       |
+|connect.googleforwork.com  |8           |5                  |62.5       |
+|m.yz.sm.cn                 |7           |5                  |71.43      |
+|search.xfinity.com         |6           |6                  |100.0      |
+|google.co.in               |6           |3                  |50.0       |
+|online-metrics.com         |5           |2                  |40.0       |
+|hangouts.google.com        |5           |1                  |20.0       |
+|google.ru                  |5           |1                  |20.0       |
+|s0.2mdn.net                |5           |3                  |60.0       |
+|googleads.g.doubleclick.net|4           |1                  |25.0       |
+|in.search.yahoo.com        |4           |2                  |50.0       |
+|m.sogou.com                |4           |3                  |75.0       |
+|away.vk.com                |4           |3                  |75.0       |
+|m.baidu.com                |3           |2                  |66.67      |
+|getpocket.com              |3           |                   |           |
+|siliconvalley.about.com    |3           |2                  |66.67      |
+|github.com                 |2           |2                  |100.0      |
+|centrum.cz                 |2           |2                  |100.0      |
+|plus.url.google.com        |2           |                   |           |
+|myactivity.google.com      |2           |1                  |50.0       |
+|wap.sogou.com              |2           |2                  |100.0      |
+|calendar.google.com        |2           |1                  |50.0       |
+|google.it                  |2           |1                  |50.0       |
+|msn.com                    |2           |1                  |50.0       |
+|google.co.th               |2           |1                  |50.0       |
+|google.cl                  |2           |1                  |50.0       |
+|moodle.aurora.edu          |2           |2                  |100.0      |
+|m.sp.sm.cn                 |2           |2                  |100.0      |
+|uk.search.yahoo.com        |2           |1                  |50.0       |
+|au.search.yahoo.com        |2           |2                  |100.0      |
+|search.1and1.com           |2           |2                  |100.0      |
+|amp.reddit.com             |2           |1                  |50.0       |
+|images.google.com.au       |1           |1                  |100.0      |
+|es.search.yahoo.com        |1           |1                  |100.0      |
+|arstechnica.com            |1           |                   |           |
+|google.bg                  |1           |1                  |100.0      |
+|news.ycombinator.com       |1           |1                  |100.0      |
+|it.pinterest.com           |1           |1                  |100.0      |
+|mx.search.yahoo.com        |1           |1                  |100.0      |
+|web.facebook.com           |1           |1                  |100.0      |
+|online.fullsail.edu        |1           |1                  |100.0      |
+|search.tb.ask.com          |1           |                   |           |
+|ph.search.yahoo.com        |1           |                   |           |
+|web.mail.comcast.net       |1           |1                  |100.0      |
+|kidrex.org                 |1           |1                  |100.0      |
+|gophergala.com             |1           |1                  |100.0      |
+|kik.com                    |1           |1                  |100.0      |
+|google.ca                  |1           |                   |           |
+|newclasses.nyu.edu         |1           |                   |           |
+|earth.google.com           |1           |                   |           |
+|google.es                  |1           |1                  |100.0      |
+|malaysia.search.yahoo.com  |1           |1                  |100.0      |
+|aol                        |1           |                   |           |
+|google.nl                  |1           |                   |           |
+|google.com.br              |1           |                   |           |
+|suche.t-online.de          |1           |1                  |100.0      |
 
 The table provides an overview of website traffic from various sources and key metrics that help evaluate user engagement and behavior based on four elements: source, total_visits, total_no_of_bounces, bounce_rate. Google website received the most traffic to the website at 38,400 visits in the first row. Of these, 19,798 were single-page visits (bounces), resulting in a bounce rate of approximately 51.56%. Following that Direct website took second place at 19,891 visits from direct traffic, with 8,606 bounces, leading to a bounce rate of about 43.27%. Thereafter, the Youtube.com website had 6,351 visits, with 4,238 bounces, resulting in a bounce rate of approximately 66.73%, higher than Google and Direct. However, search.mysearch.com website had the lowest total visits but the highest bounce rate. It had 12 visits with 11 bounces, resulting in a bounce rate of approximately 91.67%. This indicates that most users who visited the website from this source left without interacting with other pages. A high bounce rate from a source like search.mysearch.com suggests that users arriving from this source might not find the content they are looking for or that the landing page experience may not be engaging enough to encourage further exploration. It's important to note that while addressing high bounce rates is essential, the context of the source and user behavior should be thoroughly analyzed to determine the most effective strategies for improvement. Because a lower bounce rate generally indicates that users are more engaged with the website content, while a higher bounce rate may suggest that users are leaving the site after viewing only a single page.
 
 **6.3 Revenue by traffic source by week, by month in June 2017**
 ~~~~sql
-WITH GET_RE_MONTH AS 
-(
-    SELECT DISTINCT
-        CASE WHEN 1=1 THEN "Month" END time_type,
-        FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d", date)) AS time ,
-        trafficSource.source AS source,
-        ROUND(SUM(totals.totalTransactionRevenue/1000000) OVER(PARTITION BY trafficSource.source),2) revenue
-    FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201706*`
+WITH 
+month_data AS(
+  SELECT
+    "Month" time_type,
+    FORMAT_DATE("%Y%m", parse_date("%Y%m%d", date)) month,
+    trafficSource.source source,
+    ROUND(SUM(p.productRevenue)/1000000, 2) revenue
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201706*`,
+    UNNEST(hits) hits,
+    UNNEST(product) p
+  WHERE p.productRevenue IS NOT NULL
+  GROUP BY 1,2,3
+  ORDER BY revenue DESC
 ),
 
-GET_RE_WEEK AS 
-(
-    SELECT
-        CASE WHEN 1=1 THEN "WEEK" END time_type,
-        FORMAT_DATE("%Y%W", PARSE_DATE("%Y%m%d", date)) AS time,
-        trafficSource.source AS source,
-        SUM(totals.totalTransactionRevenue)/1000000 revenue
-    FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`
-    WHERE _table_suffix BETWEEN '0601' AND '0630'
-    GROUP BY 1,2,3
+week_data AS (
+  SELECT
+    "Week" time_type,
+    FORMAT_DATE("%Y%W", PARSE_DATE("%Y%m%d", date)) week,
+    trafficSource.source source,
+    ROUND(SUM(p.productRevenue)/1000000, 2) revenue
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201706*`,
+    unnest(hits) hits,
+    unnest(product) p
+  WHERE p.productRevenue IS NOT NULL
+  GROUP BY 1,2,3
+  ORDER BY revenue DESC
 )
 
-SELECT * FROM GET_RE_MONTH
-UNION ALL 
-SELECT * FROM GET_RE_WEEK
+SELECT * FROM month_data
+UNION ALL
+SELECT * FROM week_data
 ORDER BY revenue DESC;
 ~~~~
-| time_type | time   | source                        | revenue  |
-|-----------|--------|-------------------------------|----------|
-| Month     | 201706 | (direct)                      | 97231.62 |
-| WEEK      | 201724 | (direct)                      | 30883.91 |
-| WEEK      | 201725 | (direct)                      | 27254.32 |
-| Month     | 201706 | google                        | 18757.18 |
-| WEEK      | 201723 | (direct)                      | 17302.68 |
-| WEEK      | 201726 | (direct)                      | 14905.81 |
-| WEEK      | 201724 | google                        | 9217.17  |
-| Month     | 201706 | dfa                           | 8841.23  |
-| WEEK      | 201722 | (direct)                      | 6884.9   |
-| WEEK      | 201726 | google                        | 5330.57  |
-| WEEK      | 201726 | dfa                           | 3704.74  |
-| Month     | 201706 | mail.google.com               | 2563.13  |
-| WEEK      | 201724 | mail.google.com               | 2486.86  |
-| WEEK      | 201724 | dfa                           | 2341.56  |
-| WEEK      | 201722 | google                        | 2119.39  |
-| WEEK      | 201722 | dfa                           | 1670.65  |
-| WEEK      | 201723 | dfa                           | 1124.28  |
-| WEEK      | 201723 | google                        | 1083.95  |
-| WEEK      | 201725 | google                        | 1006.1   |
-| WEEK      | 201723 | search.myway.com              | 105.94   |
-| Month     | 201706 | search.myway.com              | 105.94   |
-| Month     | 201706 | groups.google.com             | 101.96   |
-| WEEK      | 201725 | mail.google.com               | 76.27    |
-| Month     | 201706 | chat.google.com               | 74.03    |
-| WEEK      | 201723 | chat.google.com               | 74.03    |
-| WEEK      | 201724 | dealspotr.com                 | 72.95    |
-| Month     | 201706 | dealspotr.com                 | 72.95    |
-| WEEK      | 201725 | mail.aol.com                  | 64.85    |
-| Month     | 201706 | mail.aol.com                  | 64.85    |
-| WEEK      | 201726 | groups.google.com             | 63.37    |
-| Month     | 201706 | phandroid.com                 | 52.95    |
-| WEEK      | 201725 | phandroid.com                 | 52.95    |
-| Month     | 201706 | sites.google.com              | 39.17    |
-| WEEK      | 201725 | groups.google.com             | 38.59    |
-| WEEK      | 201725 | sites.google.com              | 25.19    |
-| Month     | 201706 | google.com                    | 23.99    |
-| WEEK      | 201725 | google.com                    | 23.99    |
-| Month     | 201706 | yahoo                         | 20.39    |
-| WEEK      | 201726 | yahoo                         | 20.39    |
-| WEEK      | 201723 | youtube.com                   | 16.99    |
-| Month     | 201706 | youtube.com                   | 16.99    |
-| WEEK      | 201724 | bing                          | 13.98    |
-| Month     | 201706 | bing                          | 13.98    |
-| WEEK      | 201722 | sites.google.com              | 13.98    |
-| WEEK      | 201724 | l.facebook.com                | 12.48    |
-| Month     | 201706 | l.facebook.com                | 12.48    |
-| WEEK      | 201724 | t.co                          |          |
-| WEEK      | 201724 | groups.google.com             |          |
-| WEEK      | 201724 | Partners                      |          |
-| WEEK      | 201724 | qiita.com                     |          |
-| WEEK      | 201724 | sashihara.jp                  |          |
-| WEEK      | 201724 | yahoo                         |          |
-| WEEK      | 201724 | youtube.com                   |          |
-| WEEK      | 201724 | l.messenger.com               |          |
-| WEEK      | 201723 | sites.google.com              |          |
-| WEEK      | 201723 | mail.google.com               |          |
-| WEEK      | 201723 | baidu                         |          |
-| WEEK      | 201723 | productforums.google.com      |          |
-| WEEK      | 201723 | google.com                    |          |
-| WEEK      | 201723 | facebook.com                  |          |
-| WEEK      | 201723 | groups.google.com             |          |
-| WEEK      | 201723 | l.facebook.com                |          |
-| WEEK      | 201723 | ask                           |          |
-| WEEK      | 201725 | ask                           |          |
-| WEEK      | 201725 | keep.google.com               |          |
-| WEEK      | 201725 | t.co                          |          |
-| WEEK      | 201726 | optimize.google.com           |          |
-| WEEK      | 201726 | bing                          |          |
-| WEEK      | 201726 | google.co.jp                  |          |
-| WEEK      | 201726 | analytics.google.com          |          |
-| WEEK      | 201726 | sites.google.com              |          |
-| WEEK      | 201726 | quora.com                     |          |
-| WEEK      | 201726 | lm.facebook.com               |          |
-| WEEK      | 201726 | t.co                          |          |
-| WEEK      | 201726 | m.facebook.com                |          |
-| WEEK      | 201726 | search.xfinity.com            |          |
-| WEEK      | 201726 | plus.google.com               |          |
-| WEEK      | 201726 | search.incredibar.com         |          |
-| WEEK      | 201726 | m.youtube.com                 |          |
-| WEEK      | 201726 | suche.t-online.de             |          |
-| WEEK      | 201726 | businessinsider.com           |          |
-| WEEK      | 201724 | connect.googleforwork.com     |          |
-| WEEK      | 201724 | google.com.ua                 |          |
-| WEEK      | 201724 | m.youtube.com                 |          |
-| WEEK      | 201724 | search.mysearch.com           |          |
-| WEEK      | 201724 | phandroid.com                 |          |
-| WEEK      | 201722 | analytics.google.com          |          |
-| WEEK      | 201722 | s0.2mdn.net                   |          |
-| WEEK      | 201722 | Partners                      |          |
-| WEEK      | 201722 | qiita.com                     |          |
-| WEEK      | 201722 | groups.google.com             |          |
-| WEEK      | 201722 | reddit.com                    |          |
-| WEEK      | 201722 | fr.search.yahoo.com           |          |
-| WEEK      | 201722 | google.ca                     |          |
-| WEEK      | 201722 | yahoo                         |          |
-| WEEK      | 201722 | mail.google.com               |          |
-| WEEK      | 201722 | ask                           |          |
-| WEEK      | 201723 | google.com.ua                 |          |
-| WEEK      | 201723 | siliconvalley.about.com       |          |
-| WEEK      | 201723 | m.youtube.com                 |          |
-| WEEK      | 201725 | productforums.google.com      |          |
-| WEEK      | 201724 | docs.google.com               |          |
-| WEEK      | 201724 | outlook.live.com              |          |
-| WEEK      | 201724 | ask                           |          |
-| WEEK      | 201723 | connect.googleforwork.com     |          |
-| WEEK      | 201723 | au.search.yahoo.com           |          |
-| WEEK      | 201723 | google.it                     |          |
-| WEEK      | 201723 | m.baidu.com                   |          |
-| WEEK      | 201723 | lm.facebook.com               |          |
-| WEEK      | 201726 | phandroid.com                 |          |
-| WEEK      | 201726 | myactivity.google.com         |          |
-| WEEK      | 201726 | google.co.th                  |          |
-| WEEK      | 201723 | lunametrics.com               |          |
-| WEEK      | 201723 | datastudio.google.com         |          |
-| WEEK      | 201723 | businessinsider.com           |          |
-| WEEK      | 201723 | int.search.mywebsearch.com    |          |
-| WEEK      | 201726 | dealspotr.com                 |          |
-| WEEK      | 201726 | google.com.au                 |          |
-| WEEK      | 201724 | search.tb.ask.com             |          |
-| WEEK      | 201726 | hangouts.google.com           |          |
-| WEEK      | 201726 | linkedin.com                  |          |
-| WEEK      | 201726 | search.tb.ask.com             |          |
-| WEEK      | 201724 | admin.globalaccess.com        |          |
-| WEEK      | 201724 | search.xfinity.com            |          |
-| WEEK      | 201725 | optimize.google.com           |          |
-| WEEK      | 201725 | lunametrics.com               |          |
-| WEEK      | 201725 | it.search.yahoo.com           |          |
-| WEEK      | 201725 | google.co.in                  |          |
-| WEEK      | 201725 | m.baidu.com                   |          |
-| WEEK      | 201725 | dealspotr.com                 |          |
-| WEEK      | 201722 | lm.facebook.com               |          |
-| WEEK      | 201722 | sashihara.jp                  |          |
-| WEEK      | 201725 | googleads.g.doubleclick.net   |          |
-| WEEK      | 201724 | adwords.google.com            |          |
-| WEEK      | 201722 | search.tb.ask.com             |          |
-| WEEK      | 201722 | l.messenger.com               |          |
-| WEEK      | 201722 | away.vk.com                   |          |
-| WEEK      | 201722 | msn.com                       |          |
-| WEEK      | 201722 | google.co.uk                  |          |
-| Month     | 201706 | google.fr                     |          |
-| Month     | 201706 | googleads.g.doubleclick.net   |          |
-| Month     | 201706 | github.com                    |          |
-| Month     | 201706 | google.it                     |          |
-| Month     | 201706 | away.vk.com                   |          |
-| Month     | 201706 | malaysia.search.yahoo.com     |          |
-| WEEK      | 201724 | sites.google.com              |          |
-| WEEK      | 201724 | reddit.com                    |          |
-| WEEK      | 201724 | analytics.google.com          |          |
-| WEEK      | 201724 | optimize.google.com           |          |
-| WEEK      | 201724 | facebook.com                  |          |
-| WEEK      | 201724 | quora.com                     |          |
-| WEEK      | 201724 | baidu                         |          |
-| WEEK      | 201724 | m.facebook.com                |          |
-| WEEK      | 201724 | plus.url.google.com           |          |
-| WEEK      | 201724 | google.co.jp                  |          |
-| WEEK      | 201723 | m.facebook.com                |          |
-| WEEK      | 201723 | analytics.google.com          |          |
-| WEEK      | 201723 | msn.com                       |          |
-| WEEK      | 201723 | bing                          |          |
-| WEEK      | 201723 | duckduckgo.com                |          |
-| WEEK      | 201723 | sashihara.jp                  |          |
-| WEEK      | 201723 | quora.com                     |          |
-| WEEK      | 201723 | t.co                          |          |
-| WEEK      | 201723 | desktop.google.com.ua         |          |
-| WEEK      | 201723 | search.mysearch.com           |          |
-| WEEK      | 201723 | reddit.com                    |          |
-| WEEK      | 201723 | docs.google.com               |          |
-| WEEK      | 201725 | analytics.google.com          |          |
-| WEEK      | 201725 | bing                          |          |
-| WEEK      | 201725 | baidu                         |          |
-| WEEK      | 201725 | yahoo                         |          |
-| WEEK      | 201725 | duckduckgo.com                |          |
-| WEEK      | 201725 | Partners                      |          |
-| WEEK      | 201725 | sashihara.jp                  |          |
-| WEEK      | 201725 | google.co.jp                  |          |
-| WEEK      | 201725 | dfa                           |          |
-| WEEK      | 201725 | l.facebook.com                |          |
-| WEEK      | 201725 | msn.com                       |          |
-| WEEK      | 201725 | au.search.yahoo.com           |          |
-| WEEK      | 201725 | youtube.com                   |          |
-| WEEK      | 201726 | qiita.com                     |          |
-| WEEK      | 201726 | l.facebook.com                |          |
-| WEEK      | 201726 | docs.google.com               |          |
-| WEEK      | 201726 | reddit.com                    |          |
-| WEEK      | 201726 | mail.google.com               |          |
-| WEEK      | 201726 | pinterest.com                 |          |
-| WEEK      | 201726 | productforums.google.com      |          |
-| WEEK      | 201726 | github.com                    |          |
-| WEEK      | 201726 | google.fr                     |          |
-| WEEK      | 201724 | es.search.yahoo.com           |          |
-| WEEK      | 201724 | getpocket.com                 |          |
-| WEEK      | 201724 | google.co.th                  |          |
-| WEEK      | 201722 | google.com                    |          |
-| WEEK      | 201722 | youtube.com                   |          |
-| WEEK      | 201722 | bing                          |          |
-| WEEK      | 201722 | search.mysearch.com           |          |
-| WEEK      | 201722 | m.youtube.com                 |          |
-| WEEK      | 201724 | gsuite.google.com             |          |
-| WEEK      | 201724 | staging.talkgadget.google.com |          |
-| WEEK      | 201723 | nl.search.yahoo.com           |          |
-| WEEK      | 201723 | phandroid.com                 |          |
-| WEEK      | 201723 | kidrex.org                    |          |
-| WEEK      | 201723 | google.es                     |          |
-| WEEK      | 201726 | google.co.uk                  |          |
-| WEEK      | 201723 | google.nl                     |          |
-| WEEK      | 201723 | in.search.yahoo.com           |          |
-| WEEK      | 201723 | support.google.com            |          |
-| WEEK      | 201723 | github.com                    |          |
-| WEEK      | 201723 | search.xfinity.com            |          |
-| WEEK      | 201723 | google.com.tw                 |          |
-| WEEK      | 201726 | googleads.g.doubleclick.net   |          |
-| WEEK      | 201726 | getiriver.com                 |          |
-| WEEK      | 201726 | google.ca                     |          |
-| WEEK      | 201724 | linkedin.com                  |          |
-| WEEK      | 201723 | outlook.live.com              |          |
-| WEEK      | 201723 | search.tb.ask.com             |          |
-| WEEK      | 201726 | m.yz.sm.cn                    |          |
-| WEEK      | 201726 | nl.search.yahoo.com           |          |
-| WEEK      | 201724 | google.com.au                 |          |
-| WEEK      | 201724 | lm.facebook.com               |          |
-| WEEK      | 201725 | support.google.com            |          |
-| WEEK      | 201725 | google.es                     |          |
-| WEEK      | 201725 | search.xfinity.com            |          |
-| WEEK      | 201722 | dealspotr.com                 |          |
-| WEEK      | 201722 | tw.search.yahoo.com           |          |
-| WEEK      | 201725 | l.messenger.com               |          |
-| WEEK      | 201725 | google.de                     |          |
-| WEEK      | 201722 | search.earthlink.net          |          |
-| WEEK      | 201724 | plus.google.com               |          |
-| WEEK      | 201725 | google.co.uk                  |          |
-| WEEK      | 201725 | linkedin.com                  |          |
-| Month     | 201706 | kidrex.org                    |          |
-| Month     | 201706 | m.yz.sm.cn                    |          |
-| Month     | 201706 | google.co.uk                  |          |
-| Month     | 201706 | gsuite.google.com             |          |
-| Month     | 201706 | search.tb.ask.com             |          |
-| Month     | 201706 | adwords.google.com            |          |
-| Month     | 201706 | google.com.au                 |          |
-| Month     | 201706 | myactivity.google.com         |          |
-| Month     | 201706 | int.search.tb.ask.com         |          |
-| Month     | 201706 | plus.url.google.com           |          |
-| Month     | 201706 | s0.2mdn.net                   |          |
-| Month     | 201706 | google.ru                     |          |
-| Month     | 201706 | google.com.tw                 |          |
-| Month     | 201706 | search.mysearch.com           |          |
-| Month     | 201706 | search.incredibar.com         |          |
-| Month     | 201706 | google.nl                     |          |
-| Month     | 201706 | reddit.com                    |          |
-| Month     | 201706 | l.messenger.com               |          |
-| Month     | 201706 | businessinsider.com           |          |
-| Month     | 201706 | quora.com                     |          |
-| Month     | 201706 | siliconvalley.about.com       |          |
-| Month     | 201706 | productforums.google.com      |          |
-| Month     | 201706 | m.facebook.com                |          |
-| Month     | 201706 | Partners                      |          |
-| Month     | 201706 | msn.com                       |          |
-| Month     | 201706 | suche.t-online.de             |          |
-| Month     | 201706 | desktop.google.com.ua         |          |
-| Month     | 201706 | m.youtube.com                 |          |
-| Month     | 201706 | mg.mail.yahoo.com             |          |
-| Month     | 201706 | support.google.com            |          |
-| Month     | 201706 | docs.google.com               |          |
-| Month     | 201706 | lunametrics.com               |          |
-| Month     | 201706 | gophergala.com                |          |
-| Month     | 201706 | m.baidu.com                   |          |
-| Month     | 201706 | linkedin.com                  |          |
-| Month     | 201706 | search.earthlink.net          |          |
-| Month     | 201706 | it.search.yahoo.com           |          |
-| Month     | 201706 | connect.googleforwork.com     |          |
-| Month     | 201706 | google.es                     |          |
-| Month     | 201706 | getiriver.com                 |          |
-| Month     | 201706 | online.fullsail.edu           |          |
-| Month     | 201706 | sashihara.jp                  |          |
-| Month     | 201706 | centrum.cz                    |          |
-| Month     | 201706 | analytics.google.com          |          |
-| Month     | 201706 | qiita.com                     |          |
-| Month     | 201706 | google.co.jp                  |          |
-| Month     | 201706 | facebook.com                  |          |
-| Month     | 201706 | aol                           |          |
-| Month     | 201706 | au.search.yahoo.com           |          |
-| Month     | 201706 | getpocket.com                 |          |
-| Month     | 201706 | google.de                     |          |
-| Month     | 201706 | google.com.ua                 |          |
-| Month     | 201706 | keep.google.com               |          |
-| WEEK      | 201724 | mg.mail.yahoo.com             |          |
-| WEEK      | 201724 | google.com                    |          |
-| WEEK      | 201724 | blog.golang.org               |          |
-| WEEK      | 201724 | productforums.google.com      |          |
-| WEEK      | 201724 | int.search.tb.ask.com         |          |
-| WEEK      | 201724 | duckduckgo.com                |          |
-| WEEK      | 201724 | support.google.com            |          |
-| WEEK      | 201723 | yahoo                         |          |
-| WEEK      | 201723 | Partners                      |          |
-| WEEK      | 201723 | plus.google.com               |          |
-| WEEK      | 201723 | fr.search.yahoo.com           |          |
-| WEEK      | 201723 | google.co.jp                  |          |
-| WEEK      | 201723 | googleads.g.doubleclick.net   |          |
-| WEEK      | 201723 | qiita.com                     |          |
-| WEEK      | 201723 | tw.search.yahoo.com           |          |
-| WEEK      | 201723 | int.search.tb.ask.com         |          |
-| WEEK      | 201725 | reddit.com                    |          |
-| WEEK      | 201725 | quora.com                     |          |
-| WEEK      | 201725 | connect.googleforwork.com     |          |
-| WEEK      | 201725 | qiita.com                     |          |
-| WEEK      | 201725 | blog.golang.org               |          |
-| WEEK      | 201725 | m.facebook.com                |          |
-| WEEK      | 201725 | docs.google.com               |          |
-| WEEK      | 201726 | malaysia.search.yahoo.com     |          |
-| WEEK      | 201726 | int.search.tb.ask.com         |          |
-| WEEK      | 201726 | baidu                         |          |
-| WEEK      | 201726 | duckduckgo.com                |          |
-| WEEK      | 201726 | Partners                      |          |
-| WEEK      | 201726 | google.com                    |          |
-| WEEK      | 201726 | datastudio.google.com         |          |
-| WEEK      | 201726 | blog.golang.org               |          |
-| WEEK      | 201726 | facebook.com                  |          |
-| WEEK      | 201726 | ask                           |          |
-| WEEK      | 201726 | youtube.com                   |          |
-| WEEK      | 201726 | l.messenger.com               |          |
-| WEEK      | 201726 | search.mysearch.com           |          |
-| WEEK      | 201726 | sashihara.jp                  |          |
-| WEEK      | 201726 | m.baidu.com                   |          |
-| WEEK      | 201726 | adwords.google.com            |          |
-| WEEK      | 201724 | google.co.uk                  |          |
-| WEEK      | 201724 | googleads.g.doubleclick.net   |          |
-| WEEK      | 201724 | hangouts.google.com           |          |
-| WEEK      | 201724 | google.ru                     |          |
-| WEEK      | 201724 | lunametrics.com               |          |
-| WEEK      | 201722 | duckduckgo.com                |          |
-| WEEK      | 201722 | google.co.jp                  |          |
-| WEEK      | 201722 | optimize.google.com           |          |
-| WEEK      | 201722 | quora.com                     |          |
-| WEEK      | 201722 | blog.golang.org               |          |
-| WEEK      | 201722 | l.facebook.com                |          |
-| WEEK      | 201722 | facebook.com                  |          |
-| WEEK      | 201722 | productforums.google.com      |          |
-| WEEK      | 201722 | baidu                         |          |
-| WEEK      | 201722 | support.google.com            |          |
-| WEEK      | 201722 | t.co                          |          |
-| WEEK      | 201722 | m.facebook.com                |          |
-| WEEK      | 201722 | plus.google.com               |          |
-| WEEK      | 201722 | search.myway.com              |          |
-| WEEK      | 201723 | sg.search.yahoo.com           |          |
-| WEEK      | 201723 | dealspotr.com                 |          |
-| WEEK      | 201723 | optimize.google.com           |          |
-| WEEK      | 201723 | google.co.in                  |          |
-| WEEK      | 201725 | google.com.pe                 |          |
-| WEEK      | 201725 | facebook.com                  |          |
-| WEEK      | 201723 | google.co.uk                  |          |
-| WEEK      | 201723 | l.messenger.com               |          |
-| WEEK      | 201723 | blog.golang.org               |          |
-| WEEK      | 201723 | gophergala.com                |          |
-| WEEK      | 201726 | msn.com                       |          |
-| WEEK      | 201726 | centrum.cz                    |          |
-| WEEK      | 201726 | away.vk.com                   |          |
-| WEEK      | 201723 | online.fullsail.edu           |          |
-| WEEK      | 201723 | es.search.yahoo.com           |          |
-| WEEK      | 201723 | myactivity.google.com         |          |
-| WEEK      | 201723 | getpocket.com                 |          |
-| WEEK      | 201723 | aol                           |          |
-| WEEK      | 201726 | support.google.com            |          |
-| WEEK      | 201726 | lunametrics.com               |          |
-| WEEK      | 201726 | google.com.ua                 |          |
-| WEEK      | 201726 | google.it                     |          |
-| WEEK      | 201724 | github.com                    |          |
-| WEEK      | 201726 | keep.google.com               |          |
-| WEEK      | 201724 | s0.2mdn.net                   |          |
-| WEEK      | 201725 | search.tb.ask.com             |          |
-| WEEK      | 201725 | google.ca                     |          |
-| WEEK      | 201725 | m.youtube.com                 |          |
-| WEEK      | 201725 | google.co.th                  |          |
-| WEEK      | 201722 | phandroid.com                 |          |
-| WEEK      | 201722 | int.search.tb.ask.com         |          |
-| WEEK      | 201725 | online-metrics.com            |          |
-| WEEK      | 201722 | google.es                     |          |
-| WEEK      | 201722 | desktop.google.com.ua         |          |
-| WEEK      | 201722 | chat.google.com               |          |
-| WEEK      | 201722 | meetup.com                    |          |
-| WEEK      | 201725 | google.com.au                 |          |
-| WEEK      | 201725 | int.search.tb.ask.com         |          |
-| Month     | 201706 | nl.search.yahoo.com           |          |
-| Month     | 201706 | t.co                          |          |
-| Month     | 201706 | online-metrics.com            |          |
-| Month     | 201706 | staging.talkgadget.google.com |          |
-| Month     | 201706 | lm.facebook.com               |          |
-| Month     | 201706 | admin.globalaccess.com        |          |
-| Month     | 201706 | blog.golang.org               |          |
-| Month     | 201706 | pinterest.com                 |          |
-| Month     | 201706 | hangouts.google.com           |          |
-| Month     | 201706 | google.ca                     |          |
-| Month     | 201706 | ask                           |          |
-| Month     | 201706 | fr.search.yahoo.com           |          |
-| Month     | 201706 | int.search.mywebsearch.com    |          |
-| Month     | 201706 | search.xfinity.com            |          |
-| Month     | 201706 | sg.search.yahoo.com           |          |
-| Month     | 201706 | in.search.yahoo.com           |          |
-| Month     | 201706 | duckduckgo.com                |          |
-| Month     | 201706 | tw.search.yahoo.com           |          |
-| Month     | 201706 | optimize.google.com           |          |
-| Month     | 201706 | outlook.live.com              |          |
-| Month     | 201706 | google.com.pe                 |          |
-| Month     | 201706 | google.co.in                  |          |
-| Month     | 201706 | baidu                         |          |
-| Month     | 201706 | es.search.yahoo.com           |          |
-| Month     | 201706 | datastudio.google.com         |          |
-| Month     | 201706 | google.co.th                  |          |
-| Month     | 201706 | meetup.com                    |          |
-| Month     | 201706 | plus.google.com               |          |
+|time_type|month |source           |revenue |
+|---------|------|-----------------|--------|
+|Month    |201706|(direct)         |97333.62|
+|Week     |201724|(direct)         |30908.91|
+|Week     |201725|(direct)         |27295.32|
+|Month    |201706|google           |18757.18|
+|Week     |201723|(direct)         |17325.68|
+|Week     |201726|(direct)         |14914.81|
+|Week     |201724|google           |9217.17 |
+|Month    |201706|dfa              |8862.23 |
+|Week     |201722|(direct)         |6888.9  |
+|Week     |201726|google           |5330.57 |
+|Week     |201726|dfa              |3704.74 |
+|Month    |201706|mail.google.com  |2563.13 |
+|Week     |201724|mail.google.com  |2486.86 |
+|Week     |201724|dfa              |2341.56 |
+|Week     |201722|google           |2119.39 |
+|Week     |201722|dfa              |1670.65 |
+|Week     |201723|dfa              |1145.28 |
+|Week     |201723|google           |1083.95 |
+|Week     |201725|google           |1006.1  |
+|Month    |201706|search.myway.com |105.94  |
+|Week     |201723|search.myway.com |105.94  |
+|Month    |201706|groups.google.com|101.96  |
+|Week     |201725|mail.google.com  |76.27   |
+|Month    |201706|chat.google.com  |74.03   |
+|Week     |201723|chat.google.com  |74.03   |
+|Week     |201724|dealspotr.com    |72.95   |
+|Month    |201706|dealspotr.com    |72.95   |
+|Month    |201706|mail.aol.com     |64.85   |
+|Week     |201725|mail.aol.com     |64.85   |
+|Week     |201726|groups.google.com|63.37   |
+|Week     |201725|phandroid.com    |52.95   |
+|Month    |201706|phandroid.com    |52.95   |
+|Month    |201706|sites.google.com |39.17   |
+|Week     |201725|groups.google.com|38.59   |
+|Week     |201725|sites.google.com |25.19   |
+|Month    |201706|google.com       |23.99   |
+|Week     |201725|google.com       |23.99   |
+|Month    |201706|yahoo            |20.39   |
+|Week     |201726|yahoo            |20.39   |
+|Month    |201706|youtube.com      |16.99   |
+|Week     |201723|youtube.com      |16.99   |
+|Week     |201724|bing             |13.98   |
+|Month    |201706|bing             |13.98   |
+|Week     |201722|sites.google.com |13.98   |
+|Week     |201724|l.facebook.com   |12.48   |
+|Month    |201706|l.facebook.com   |12.48   |
 
 This table represents revenue data collection with various attributes, including time type, time period, source, and revenue amount. Each row corresponds to a specific time period (week or month) and provides information about the revenue generated from different sources during that time period. The author found the insights bellow through the table above.
 
@@ -732,26 +377,47 @@ Revenue is reported on a weekly and monthly basis. It seems like the data spans 
 
 **6.4 Average number of pageviews by purchaser type**
 ~~~~sql
-WITH GET_AVG_6_MONTH AS (SELECT
-CASE WHEN 1 = 1 THEN "201706" END AS Month,
-SUM(CASE WHEN totals.transactions >=1 THEN totals.transactions END ) AS total_transactions,
-COUNT(DISTINCT(CASE WHEN totals.transactions >=1 THEN fullVisitorId END )) AS NUM_USER
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201706*`)
+WITH
+purchaser_data AS(
+  SELECT
+      FORMAT_DATE("%Y%m",PARSE_DATE("%Y%m%d",date)) month,
+      (SUM(totals.pageviews)/COUNT(DISTINCT fullvisitorid)) avg_pageviews_purchase,
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`
+    ,UNNEST(hits) hits
+    ,UNNEST(product) product
+  WHERE _table_suffix BETWEEN '0601' AND '0731'
+  AND totals.transactions>=1
+  AND product.productRevenue IS NOT NULL
+  GROUP BY month
+),
 
-SELECT 
-Month,
-ROUND(total_transactions/NUM_USER,2) as Avg_total_transactions_per_user
-FROM GET_AVG_6_MONTH;
+non_purchaser_data AS(
+  SELECT
+      FORMAT_DATE("%Y%m",PARSE_DATE("%Y%m%d",date)) month,
+      (SUM(totals.pageviews)/COUNT(DISTINCT fullvisitorid)) avg_pageviews_non_purchase,
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`
+    ,UNNEST(hits) hits
+    ,UNNEST(product) product
+  WHERE _table_suffix BETWEEN '0601' AND '0731'
+  AND totals.transactions IS NULL
+  AND product.productRevenue IS NULL
+  GROUP BY month
+)
+
+SELECT
+    pd.*,
+    avg_pageviews_non_purchase
+FROM purchaser_data pd
+FULL JOIN non_purchaser_data USING(month)
+ORDER BY pd.month;
 ~~~~
-| month  | avg_pageviews_purchase | avg_pageviews_non_purchase |
-|--------|------------------------|----------------------------|
-| 201706 | 25.73            | 4.07               |
-| 201707 | 27.72            | 4.19               |
+|month                      |avg_pageviews_purchase|avg_pageviews_non_purchase|
+|---------------------------|----------------------|--------------------------|
+|201706                     |94.02050113895217     |316.86558846341671        |
+|201707                     |124.23755186721992    |334.05655979568053        |
 
 
 The table shows user behavior in a tabular format with two columns  "avg_pageviews_purchase," and "avg_pageviews_non_purchase"  in two consecutive months, June 2017 (201706) and July 2017 (201707).
-
- **Pageviews for Users Making a Purchase vs. Non-Purchasers:** The data highlights a significant difference in average pageviews between users who made a purchase and those who did not. On average, users who made a purchase tend to view more pages on the website than those who did not. In June 2017, for instance, the average pageviews for purchasers (25.74) were much higher compared to non-purchasers (4.07).
  
  **Engagement Patterns:** The higher average pageviews for purchasers suggest that users who are more engaged with the website's content are more likely to make a purchase. This could indicate a positive correlation between engagement and conversion.
  
@@ -761,191 +427,193 @@ The table shows user behavior in a tabular format with two columns  "avg_pagevie
 
 **6.5 Average number of transactions per user that purchased in July 2017**
 ~~~~sql
-WITH GET_AVG_7_MONTH AS (SELECT
-CASE WHEN 1 = 1 THEN "201707" END AS Month,
-SUM(CASE WHEN totals.transactions >=1 THEN totals.transactions END ) AS total_transactions,
-COUNT(DISTINCT(CASE WHEN totals.transactions >=1 THEN fullVisitorId END )) AS NUM_USER
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201706*`)
-
-SELECT 
-Month,
-ROUND(total_transactions/NUM_USER,2) as Avg_total_transactions_per_user
-FROM GET_AVG_7_MONTH;
+SELECT
+    FORMAT_DATE("%Y%m",PARSE_DATE("%Y%m%d",date)) month,
+    SUM(totals.transactions)/COUNT(DISTINCT fullvisitorid) Avg_total_transactions_per_user
+from `bigquery-public-data.google_analytics_sample.ga_sessions_201707*`
+    ,UNNEST(hits) hits
+    ,UNNEST(product) product
+WHERE totals.transactions >= 1
+  and product.productRevenue IS NOT NULL
+GROUP BY month;
 ~~~~
-| Month  | Avg_total_transactions_per_user |
-|--------|---------------------------------|
-| 201707 | 1.11                   |
+|month                      |Avg_total_transactions_per_user|
+|---------------------------|-------------------------------|
+|201707                     |4.16390041493776               |
 
 The table shows the average total transactions per user in July. 
-This data suggests that, during July 2017, the typical user conducted about 1.11 transactions on average. This could be useful for understanding user behavior, tracking user engagement with your platform, or evaluating the effectiveness of marketing campaigns or promotions during that specific month.
+This data suggests that, during July 2017, the typical user conducted about 4.16 transactions on average. This could be useful for understanding user behavior, tracking user engagement with your platform, or evaluating the effectiveness of marketing campaigns or promotions during that specific month.
 
 **6.6 Average amount of money spent per session. Only include purchaser data in 2017**
 ~~~~sql
 
+WITH revenue_by_user AS (
+  SELECT
+    FORMAT_DATE('%Y%m', PARSE_DATE('%Y%m%d', date)) month
+    ,SUM(product.productRevenue) AS total_revenue
+    ,SUM(totals.visits) total_visits
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201707*`
+    ,UNNEST(hits) hits
+    ,UNNEST(hits.product) product
+  WHERE 
+    product.productRevenue IS NOT NULL
+    AND totals.transactions IS NOT NULL
+  GROUP BY month
+)
+
 SELECT 
-  FORMAT_DATE('%Y%m', PARSE_DATE('%Y%m%d', date)) AS month,
-  ROUND((SUM(product.productRevenue) / SUM(totals.visits))/1000000,2) AS Avg_revenue_by_user_per_visit
-FROM 
-  `bigquery-public-data.google_analytics_sample.ga_sessions_*`, 
-  UNNEST(hits) AS hits, 
-  UNNEST(hits.product) AS product
-WHERE 
-  _TABLE_SUFFIX BETWEEN '20170701' AND '20170731'
-  AND product.productRevenue IS NOT NULL
-  AND totals.transactions IS NOT NULL
-GROUP BY month;
+  month
+  ,ROUND((total_revenue / total_visits)/1000000, 2) Avg_revenue_by_user_per_visit
+FROM revenue_by_user
+ORDER BY month;
 
 ~~~~
-| Month  | Avg_total_transactions_per_user |
-|--------|---------------------------------|
-| 201707 | 43.86                  |
+|month                      |Avg_revenue_by_user_per_visit|
+|---------------------------|-----------------------------|
+|201707                     |43.86                        |
 
 The average total transactions per user for July 2017 is 43.86. This suggests that, on average, each user conducted approximately 44 transactions during that month. This could be an important metric for businesses to measure user engagement and activity.
 
 
 **6.7 Other products purchased by customers who purchased product” Youtube Men’s Vintage Henley” in July 2017**
 ~~~~sql
-WITH GET_CUS_ID AS (SELECT DISTINCT fullVisitorId as Henley_CUSTOMER_ID
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201707*`,
-UNNEST(hits) AS hits,
-UNNEST(hits.product) as product
-WHERE product.v2ProductName = "YouTube Men's Vintage Henley"
-AND product.productRevenue IS NOT NULL)
-
-SELECT product.v2ProductName AS other_purchased_products,
-       SUM(product.productQuantity) AS quantity
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201707*` TAB_A 
-RIGHT JOIN GET_CUS_ID
-ON GET_CUS_ID.Henley_CUSTOMER_ID=TAB_A.fullVisitorId,
-UNNEST(hits) AS hits,
-UNNEST(hits.product) as product
-WHERE TAB_A.fullVisitorId IN (SELECT * FROM GET_CUS_ID)
-    AND product.v2ProductName <> "YouTube Men's Vintage Henley"
+WITH
+buyer_list AS(
+    SELECT
+        distinct fullVisitorId  
+    FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201707*`
+    , UNNEST(hits) hits
+    , UNNEST(hits.product) product
+    WHERE product.v2ProductName = "YouTube Men's Vintage Henley"
+    AND totals.transactions >=1
     AND product.productRevenue IS NOT NULL
-GROUP BY product.v2ProductName
-ORDER BY QUANTITY DESC;
+)
+
+SELECT
+  product.v2ProductName other_purchased_products,
+  SUM(product.productQuantity) quantity
+FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201707*`
+, UNNEST(hits) hits
+, UNNEST(hits.product) product
+JOIN buyer_list USING(fullVisitorId)
+WHERE product.v2ProductName != "YouTube Men's Vintage Henley"
+  AND product.productRevenue IS NOT NULL
+GROUP BY other_purchased_products
+ORDER BY quantity DESC;
 ~~~~
-| other_purchased_products                                 | quantity |
-|----------------------------------------------------------|----------|
-| Google Sunglasses                                        | 20       |
-| Google Womens Vintage Hero Tee Black                     | 7        |
-| SPF-15 Slim & Slender Lip Balm                           | 6        |
-| Google Womens Short Sleeve Hero Tee Red Heather          | 4        |
-| YouTube Mens Fleece Hoodie Black                         | 3        |
-| Google Mens Short Sleeve Badge Tee Charcoal              | 3        |
-| YouTube Twill Cap                                        | 2        |
-| Red Shine 15 oz Mug                                      | 2        |
-| Google Doodle Decal                                      | 2        |
-| Recycled Mouse Pad                                       | 2        |
-| Google Mens Short Sleeve Hero Tee Charcoal               | 2        |
-| Android Womens Fleece Hoodie                             | 2        |
-| 22 oz YouTube Bottle Infuser                             | 2        |
-| Android Mens Vintage Henley                              | 2        |
-| Crunch Noise Dog Toy	                                   | 2        |
-| Android Wool Heather Cap Heather/Black                   | 2        |
-| Google Mens Vintage Badge Tee Black                      | 1        |
-| Google Twill Cap                                         | 1        |
-| Google Mens Long & Lean Tee Grey                         | 1        |
-| Google Mens Long & Lean Tee Charcoal                     | 1        |
-| Google Laptop and Cell Phone Stickers                    | 1        |
-| Google Mens Bike Short Sleeve Tee Charcoal               | 1        |
-| Google 5-Panel Cap                                       | 1        |
-| Google Toddler Short Sleeve T-shirt Grey                 | 1        |
-| Android Sticker Sheet Ultra Removable                    | 1        |
-| YouTube Custom Decals                                    | 1        |
-| Four Color Retractable Pen                               | 1        |
-| Google Mens Long Sleeve Raglan Ocean Blue                | 1        |
-| Google Mens Vintage Badge Tee White                      | 1        |
-| Google Mens 100% Cotton Short Sleeve Hero Tee Red        | 1        |
-| Android Mens Vintage Tank                                | 1        |
-| Google Mens Performance Full Zip Jacket Black            | 1        |
-| 26 oz Double Wall Insulated Bottle                       | 1        |
-| Google Mens  Zip Hoodie                                  | 1        |
-| YouTube Womens Short Sleeve Hero Tee Charcoal            | 1        |
-| Google Mens Pullover Hoodie Grey                         | 1        |
-| YouTube Mens Short Sleeve Hero Tee White                 | 1        |
-| Android Mens Short Sleeve Hero Tee White                 | 1        |
-| Android Mens Pep Rally Short Sleeve Tee Navy             | 1        |
-| YouTube Mens Short Sleeve Hero Tee Black                 | 1        |
-| Google Slim Utility Travel Bag                           | 1        |
-| Android BTTF Moonshot Graphic Tee                        | 1        |
-| Google Mens Airflow 1/4 Zip Pullover Black               | 1        |
-| Google Womens Long Sleeve Tee Lavender                   | 1        |
-| 8 pc Android Sticker Sheet                               | 1        |
-| YouTube Hard Cover Journal                               | 1        |
-| Android Mens Short Sleeve Hero Tee Heather               | 1        |
-| YouTube Womens Short Sleeve Tri-blend Badge Tee Charcoal | 1        |
-| Google Mens Performance 1/4 Zip Pullover Heather/Black   | 1        |
-| YouTube Mens Long & Lean Tee Charcoal                    | 1        |
+|other_purchased_products                                 |quantity|
+|---------------------------------------------------------|--------|
+|Google Sunglasses                                        |20      |
+|Google Women's Vintage Hero Tee Black                    |7       |
+|SPF-15 Slim & Slender Lip Balm                           |6       |
+|Google Women's Short Sleeve Hero Tee Red Heather         |4       |
+|YouTube Men's Fleece Hoodie Black                        |3       |
+|Google Men's Short Sleeve Badge Tee Charcoal             |3       |
+|Android Men's Vintage Henley                             |2       |
+|22 oz YouTube Bottle Infuser                             |2       |
+|Android Wool Heather Cap Heather/Black                   |2       |
+|Crunch Noise Dog Toy                                     |2       |
+|Google Men's Short Sleeve Hero Tee Charcoal              |2       |
+|Android Women's Fleece Hoodie                            |2       |
+|Google Doodle Decal                                      |2       |
+|Recycled Mouse Pad                                       |2       |
+|YouTube Twill Cap                                        |2       |
+|Red Shine 15 oz Mug                                      |2       |
+|Google Men's  Zip Hoodie                                 |1       |
+|Google Men's 100% Cotton Short Sleeve Hero Tee Red       |1       |
+|Android Men's Vintage Tank                               |1       |
+|Google Men's Vintage Badge Tee White                     |1       |
+|Android Men's Short Sleeve Hero Tee White                |1       |
+|Android Men's Pep Rally Short Sleeve Tee Navy            |1       |
+|YouTube Men's Short Sleeve Hero Tee Black                |1       |
+|Google Men's Pullover Hoodie Grey                        |1       |
+|YouTube Men's Short Sleeve Hero Tee White                |1       |
+|Google Slim Utility Travel Bag                           |1       |
+|YouTube Women's Short Sleeve Hero Tee Charcoal           |1       |
+|Google Men's Performance Full Zip Jacket Black           |1       |
+|26 oz Double Wall Insulated Bottle                       |1       |
+|8 pc Android Sticker Sheet                               |1       |
+|Google Women's Long Sleeve Tee Lavender                  |1       |
+|YouTube Men's Long & Lean Tee Charcoal                   |1       |
+|Android Men's Short Sleeve Hero Tee Heather              |1       |
+|YouTube Women's Short Sleeve Tri-blend Badge Tee Charcoal|1       |
+|Google Men's Performance 1/4 Zip Pullover Heather/Black  |1       |
+|YouTube Hard Cover Journal                               |1       |
+|Android BTTF Moonshot Graphic Tee                        |1       |
+|Google Men's Airflow 1/4 Zip Pullover Black              |1       |
+|Google Men's Bike Short Sleeve Tee Charcoal              |1       |
+|Google 5-Panel Cap                                       |1       |
+|Google Toddler Short Sleeve T-shirt Grey                 |1       |
+|Android Sticker Sheet Ultra Removable                    |1       |
+|Google Men's Long & Lean Tee Charcoal                    |1       |
+|Google Twill Cap                                         |1       |
+|Google Men's Long & Lean Tee Grey                        |1       |
+|Google Men's Vintage Badge Tee Black                     |1       |
+|Google Men's Long Sleeve Raglan Ocean Blue               |1       |
+|YouTube Custom Decals                                    |1       |
+|Four Color Retractable Pen                               |1       |
+|Google Laptop and Cell Phone Stickers                    |1       |
                                                                       
 
 Overall, the data provides valuable insights into customer preferences, product popularity, and potential areas for marketing and merchandising strategies. Further analysis of historical data and integration with customer demographics could provide a more comprehensive understanding of these trends.
  
  **6.8 Calculate cohort map from product view to add_to_cart/number_product_view.**
  ~~~~sql
-WITH addtocart AS
-(
-        SELECT
-        FORMAT_DATE("%Y%m",PARSE_DATE("%Y%m%d",date)) AS month
-        ,COUNT(eCommerceAction.action_type) AS num_addtocart
-        FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`   
-                ,UNNEST (hits) AS hits
-        WHERE _table_suffix BETWEEN '0101' AND '0331'
-                AND eCommerceAction.action_type = '3'
-        GROUP BY month 
+WITH
+product_view AS(
+  SELECT
+    FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d", date)) month
+    ,COUNT(product.productSKU) num_product_view
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`
+  , UNNEST(hits) hits
+  , UNNEST(hits.product) product
+  WHERE _TABLE_SUFFIX BETWEEN '20170101' AND '20170331'
+  AND hits.eCommerceAction.action_type = '2'
+  GROUP BY 1
+),
+
+add_to_cart AS(
+  SELECT
+    FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d", date)) month,
+    COUNT(product.productSKU) num_addtocart
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`
+  , UNNEST(hits) hits
+  , UNNEST(hits.product) product
+  WHERE _TABLE_SUFFIX BETWEEN '20170101' AND '20170331'
+  AND hits.eCommerceAction.action_type = '3'
+  GROUP BY 1
+),
+
+purchase AS(
+  SELECT
+    FORMAT_DATE("%Y%m", PARSE_DATE("%Y%m%d", date)) month,
+    COUNT(product.productSKU) num_purchase
+  FROM `bigquery-public-data.google_analytics_sample.ga_sessions_*`
+  , UNNEST(hits) hits
+  , UNNEST(hits.product) product
+  WHERE _TABLE_SUFFIX BETWEEN '20170101' AND '20170331'
+    AND hits.eCommerceAction.action_type = '6'
+    AND product.productRevenue IS NOT NULL   --phải thêm điều kiện này để đảm bảo có revenue
+  group by 1
 )
-    , productview AS
-(
-        SELECT
-        FORMAT_DATE("%Y%m",PARSE_DATE("%Y%m%d",date)) AS month
-        ,COUNT(eCommerceAction.action_type) AS num_product_view
-        FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`   
-                ,UNNEST (hits) AS hits
-        WHERE _table_suffix BETWEEN '0101' AND '0331'
-                AND eCommerceAction.action_type = '2'
-        GROUP BY month 
-)
-    , id_purchase_revenue AS -- this is the first step to inspect the purchase step
-(
-                SELECT
-        FORMAT_DATE("%Y%m",PARSE_DATE("%Y%m%d",date)) AS month
-        ,fullVisitorId
-        ,eCommerceAction.action_type
-        ,product.productRevenue -- notice that not every purchase step that an ID made that the revenue was recorded (maybe refund?).
-        FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`   
-                ,UNNEST (hits) AS hits
-                ,UNNEST (hits.product) AS product -- productrevenue 
-        WHERE _table_suffix BETWEEN '0101' AND '0331'
-                AND eCommerceAction.action_type = '6'
-)
-    , purchase AS
-(
-        SELECT 
-            month
-            ,COUNT(action_type) AS num_purchase
-        FROM id_purchase_revenue 
-        WHERE productRevenue IS NOT NULL
-        GROUP BY month
-)
-SELECT 
-        month
-        ,num_product_view
-        ,num_addtocart
-        ,num_purchase
-        ,ROUND(num_addtocart / num_product_view * 100.0, 2) AS add_to_cart_rate
-        ,ROUND(num_purchase / num_product_view * 100.0, 2) AS purchase_rate
-FROM productview
-JOIN addtocart
-USING (month)
-JOIN purchase
-USING (month)
-ORDER BY month;
+
+SELECT
+    pv.*,
+    num_addtocart,
+    num_purchase,
+    ROUND(num_addtocart*100/num_product_view,2) add_to_cart_rate,
+    ROUND(num_purchase*100/num_product_view,2) purchase_rate
+FROM product_view pv
+LEFT JOIN add_to_cart a ON pv.month = a.month
+LEFT JOIN purchase p ON pv.month = p.month
+ORDER BY pv.month;
 ~~~~
-| month  | num_product_view | num_addtocart | num_purchase | add_to_cart_rate | purchase_rate |
-|--------|------------------|---------------|--------------|------------------|---------------|
-| 201701 | 25787            | 7342          | 4328         | 28.47            | 16.78         |
-| 201702 | 21489            | 7360          | 4141         | 34.25            | 19.27         |
-| 201703 | 23549            | 8782          | 6018         | 37.29            | 25.56         |
+|month                                                    |num_product_view|num_addtocart|num_purchase|add_to_cart_rate|purchase_rate|
+|---------------------------------------------------------|----------------|-------------|------------|----------------|-------------|
+|201701                                                   |25787           |7342         |2143        |28.47           |8.31         |
+|201702                                                   |21489           |7360         |2060        |34.25           |9.59         |
+|201703                                                   |23549           |8782         |2977        |37.29           |12.64        |
+
 
 
 The table illustrates five various metrics and rates related to user behavior from January to March 2017.
