@@ -13,11 +13,9 @@
   
 ## 1. Introduction and Motivation
 
-The eCommerce dataset is stored in a public Google BigQuery dataset. This dataset contains information about user sessions on a website collected from Google Analytics in 2017.
+This project analyzed the business performance of an eCommerce website using SQL in Google BigQuery, leveraging advanced techniques like window and aggregate functions. The dataset, publicly available on Google BigQuery, contains user session data from Google Analytics in 2017.
 
-Based on the eCommerce dataset, the author perform queries to analyze website activity in 2017, such as calculating bounce rate, identifying days with the highest revenue, analyzing user behavior on pages, and various other types of analysis. This project aims to have an outlook on the business situation, marketing activity efficiency analyzing the products.
-
-To query and work with this dataset, the author uses the Google BigQuery tool to write and execute SQL queries.
+The analysis covered key aspects such as website traffic, customer behavior, revenue trends, sales performance, and conversion optimization. Insights from this study supported the Sales and Marketing teams in making data-driven decisions to improve business strategies.
 
 <div id='clean_data'/>
   
@@ -144,31 +142,19 @@ UNNEST(hits.product) as product
     ,SUM(totals.visits) visits
     ,SUM(totals.pageviews) pageviews
     ,SUM(totals.transactions) transactions
-    ,ROUND(SUM(totals.totalTransactionRevenue)/POW(10,6),2) revenue
    FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`
    WHERE _table_suffix BETWEEN '0101' AND '0331'
    GROUP BY month
    ORDER BY month;
 ~~~~
 
-| month  | visits | pageviews | transactions | revenue   |
-|--------|--------|-----------|--------------|-----------|
-| 201701 | 64694  | 257708    | 713          | 106248.15 |
-| 201702 | 62192  | 233373    | 733          | 116111.6  |
-| 201703 | 69931  | 259522    | 993          | 150224.7  |
+| month  | visits | pageviews | transactions |
+|--------|--------|-----------|--------------|
+| 201701 | 64694  | 257708    | 713          |
+| 201702 | 62192  | 233373    | 733          |
+| 201703 | 69931  | 259522    | 993          |
 
-The table provides a snapshot of The eCommerce website performance over the first few months of 2017, including visits, pageviews, transactions, and revenue metrics. The author derive some insights from the provided monthly data:
-
- **Traffic and Engagement Patterns**: The number of visits and pageviews increased from January (`201701`) to March (`201703`), suggesting a growing website interest over time. Besides that, the increase in pageviews is a positive sign, indicating that users explore multiple pages during their visits, potentially finding the content engaging.
- 
-  **Conversion and Revenue Trends**:The number of transactions and total revenue also steadily increased from January to March. This demonstrates that more users are engaging with the site, and a growing proportion of them are also making transactions, contributing to increased revenue.
-Moreover, the substantial jump in transactions and revenue from January to March (`201703`) suggests that efforts made during this period might have been particularly effective in driving user conversions.
-
-  **Seasonal or Marketing Influence**:The consistent growth in both transactions and revenue over the three months could indicate the influence of seasonality, marketing campaigns, or optimizations implemented during this time.
-  
-  **Opportunities for Improvement**: While the data shows positive growth, there might be opportunities to optimize user engagement and conversions further. Analyzing specific user journeys, popular landing pages, and exit points could help identify areas for improvement.
-  
- **Future Strategy and Focus**: Consider further investigating what strategies, campaigns, or changes were implemented between January and March that contributed to the significant increase in transactions and revenue. These insights can inform future marketing and optimization efforts.
+From January to March 2017, the eCommerce website saw steady growth in visits, pageviews, and transactions, with a significant surge in March. This suggests increased engagement, effective marketing, or seasonal influence. Further analysis of user behavior can optimize future strategies.
 
 **6.2 Bounce rate per traffic source in July 2017**
 ~~~~sql
@@ -281,17 +267,17 @@ ORDER BY total_visits DESC;
 |google.com.br              |1           |                   |           |
 |suche.t-online.de          |1           |1                  |100.0      |
 
-The table provides an overview of website traffic from various sources and key metrics that help evaluate user engagement and behavior based on four elements: source, total_visits, total_no_of_bounces, bounce_rate. Google website received the most traffic to the website at 38,400 visits in the first row. Of these, 19,798 were single-page visits (bounces), resulting in a bounce rate of approximately 51.56%. Following that Direct website took second place at 19,891 visits from direct traffic, with 8,606 bounces, leading to a bounce rate of about 43.27%. Thereafter, the Youtube.com website had 6,351 visits, with 4,238 bounces, resulting in a bounce rate of approximately 66.73%, higher than Google and Direct. However, search.mysearch.com website had the lowest total visits but the highest bounce rate. It had 12 visits with 11 bounces, resulting in a bounce rate of approximately 91.67%. This indicates that most users who visited the website from this source left without interacting with other pages. A high bounce rate from a source like search.mysearch.com suggests that users arriving from this source might not find the content they are looking for or that the landing page experience may not be engaging enough to encourage further exploration. It's important to note that while addressing high bounce rates is essential, the context of the source and user behavior should be thoroughly analyzed to determine the most effective strategies for improvement. Because a lower bounce rate generally indicates that users are more engaged with the website content, while a higher bounce rate may suggest that users are leaving the site after viewing only a single page.
+Google drives the most traffic but has a bounce rate of 51.56%. Social media sources (YouTube 66.73%, Facebook 64.28%) show low retention, while Reddit (28.57%) attracts engaged users. Some sources indicate poor-quality traffic. It is necessary to optimize landing pages, refine SEO, invest in high-retention sources, and filter low-quality traffic.
 
 **6.3 Revenue by traffic source by week, by month in June 2017**
 ~~~~sql
 WITH 
-month_data AS(
+month_data as(
   SELECT
-    "Month" time_type,
-    FORMAT_DATE("%Y%m", parse_date("%Y%m%d", date)) month,
-    trafficSource.source source,
-    ROUND(SUM(p.productRevenue)/1000000, 2) revenue
+    "Month" as time_type,
+    format_date("%Y%m", parse_date("%Y%m%d", date)) as month,
+    trafficSource.source AS source,
+    SUM(p.productRevenue)/1000000 AS revenue
   FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201706*`,
     UNNEST(hits) hits,
     UNNEST(product) p
@@ -300,12 +286,12 @@ month_data AS(
   ORDER BY revenue DESC
 ),
 
-week_data AS (
+week_data as(
   SELECT
-    "Week" time_type,
-    FORMAT_DATE("%Y%W", PARSE_DATE("%Y%m%d", date)) week,
-    trafficSource.source source,
-    ROUND(SUM(p.productRevenue)/1000000, 2) revenue
+    "Week" as time_type,
+    format_date("%Y%W", parse_date("%Y%m%d", date)) as week,
+    trafficSource.source AS source,
+    SUM(p.productRevenue)/1000000 AS revenue
   FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201706*`,
     unnest(hits) hits,
     unnest(product) p
@@ -317,63 +303,58 @@ week_data AS (
 SELECT * FROM month_data
 UNION ALL
 SELECT * FROM week_data
-ORDER BY revenue DESC;
+ORDER BY time_type, revenue DESC;
 ~~~~
-|time_type|month |source           |revenue |
-|---------|------|-----------------|--------|
-|Month    |201706|(direct)         |97333.62|
-|Week     |201724|(direct)         |30908.91|
-|Week     |201725|(direct)         |27295.32|
-|Month    |201706|google           |18757.18|
-|Week     |201723|(direct)         |17325.68|
-|Week     |201726|(direct)         |14914.81|
-|Week     |201724|google           |9217.17 |
-|Month    |201706|dfa              |8862.23 |
-|Week     |201722|(direct)         |6888.9  |
-|Week     |201726|google           |5330.57 |
-|Week     |201726|dfa              |3704.74 |
-|Month    |201706|mail.google.com  |2563.13 |
-|Week     |201724|mail.google.com  |2486.86 |
-|Week     |201724|dfa              |2341.56 |
-|Week     |201722|google           |2119.39 |
-|Week     |201722|dfa              |1670.65 |
-|Week     |201723|dfa              |1145.28 |
-|Week     |201723|google           |1083.95 |
-|Week     |201725|google           |1006.1  |
-|Month    |201706|search.myway.com |105.94  |
-|Week     |201723|search.myway.com |105.94  |
-|Month    |201706|groups.google.com|101.96  |
-|Week     |201725|mail.google.com  |76.27   |
-|Month    |201706|chat.google.com  |74.03   |
-|Week     |201723|chat.google.com  |74.03   |
-|Week     |201724|dealspotr.com    |72.95   |
-|Month    |201706|dealspotr.com    |72.95   |
-|Month    |201706|mail.aol.com     |64.85   |
-|Week     |201725|mail.aol.com     |64.85   |
-|Week     |201726|groups.google.com|63.37   |
-|Week     |201725|phandroid.com    |52.95   |
-|Month    |201706|phandroid.com    |52.95   |
-|Month    |201706|sites.google.com |39.17   |
-|Week     |201725|groups.google.com|38.59   |
-|Week     |201725|sites.google.com |25.19   |
-|Month    |201706|google.com       |23.99   |
-|Week     |201725|google.com       |23.99   |
-|Month    |201706|yahoo            |20.39   |
-|Week     |201726|yahoo            |20.39   |
-|Month    |201706|youtube.com      |16.99   |
-|Week     |201723|youtube.com      |16.99   |
-|Week     |201724|bing             |13.98   |
-|Month    |201706|bing             |13.98   |
-|Week     |201722|sites.google.com |13.98   |
-|Week     |201724|l.facebook.com   |12.48   |
-|Month    |201706|l.facebook.com   |12.48   |
+| time_type | month  | source               | revenue        |
+|-----------|--------|----------------------|---------------:|
+| Month     | 201706 | (direct)             | 97333.619695   |
+| Month     | 201706 | google               | 18757.17992    |
+| Month     | 201706 | dfa                  | 8862.229996    |
+| Month     | 201706 | mail.google.com      | 2563.13        |
+| Month     | 201706 | search.myway.com     | 105.939998     |
+| Month     | 201706 | groups.google.com    | 101.96         |
+| Month     | 201706 | chat.google.com      | 74.03          |
+| Month     | 201706 | dealspotr.com        | 72.95          |
+| Month     | 201706 | mail.aol.com         | 64.849998      |
+| Month     | 201706 | phandroid.com        | 52.95          |
+| Month     | 201706 | sites.google.com     | 39.17          |
+| Month     | 201706 | google.com           | 23.99          |
+| Month     | 201706 | yahoo                | 20.39          |
+| Month     | 201706 | youtube.com          | 16.99          |
+| Month     | 201706 | bing                 | 13.98          |
+| Month     | 201706 | l.facebook.com       | 12.48          |
+| Week      | 201724 | (direct)             | 30908.909927   |
+| Week      | 201725 | (direct)             | 27295.319924   |
+| Week      | 201723 | (direct)             | 17325.679919   |
+| Week      | 201726 | (direct)             | 14914.80995    |
+| Week      | 201724 | google               | 9217.169976    |
+| Week      | 201722 | (direct)             | 6888.899975    |
+| Week      | 201726 | google               | 5330.569964    |
+| Week      | 201726 | dfa                  | 3704.74        |
+| Week      | 201724 | mail.google.com      | 2486.86        |
+| Week      | 201724 | dfa                  | 2341.56        |
+| Week      | 201722 | google               | 2119.38999     |
+| Week      | 201722 | dfa                  | 1670.649998    |
+| Week      | 201723 | dfa                  | 1145.279998    |
+| Week      | 201723 | google               | 1083.949999    |
+| Week      | 201725 | google               | 1006.099991    |
+| Week      | 201723 | search.myway.com     | 105.939998     |
+| Week      | 201725 | mail.google.com      | 76.27          |
+| Week      | 201723 | chat.google.com      | 74.03          |
+| Week      | 201724 | dealspotr.com        | 72.95          |
+| Week      | 201725 | mail.aol.com         | 64.849998      |
+| Week      | 201726 | groups.google.com    | 63.37          |
+| Week      | 201725 | phandroid.com        | 52.95          |
+| Week      | 201725 | groups.google.com    | 38.59          |
+| Week      | 201725 | sites.google.com     | 25.19          |
+| Week      | 201725 | google.com           | 23.99          |
+| Week      | 201726 | yahoo                | 20.39          |
+| Week      | 201723 | youtube.com          | 16.99          |
+| Week      | 201724 | bing                 | 13.98          |
+| Week      | 201722 | sites.google.com     | 13.98          |
+| Week      | 201724 | l.facebook.com       | 12.48          |
 
-This table represents revenue data collection with various attributes, including time type, time period, source, and revenue amount. Each row corresponds to a specific time period (week or month) and provides information about the revenue generated from different sources during that time period. The author found the insights bellow through the table above.
-
- **Direct Revenue and Source Breakdown:** The dataset includes revenue from various sources, such as (direct), Google, DFA, mail.google.com, and search engines like myway.com. Revenue comes from different sources, including direct website visits, organic search traffic, and referrals from various websites.
- 
-**Time Period Analysis:**
-Revenue is reported on a weekly and monthly basis. It seems like the data spans multiple months, including the month labeled "201706."
+It can be seen that the two sources, Direct and Google, have the highest revenue during both the weekly and monthly periods.
 
 **6.4 Average number of pageviews by purchaser type**
 ~~~~sql
@@ -417,13 +398,7 @@ ORDER BY pd.month;
 |201707                     |124.23755186721992    |334.05655979568053        |
 
 
-The table shows user behavior in a tabular format with two columns  "avg_pageviews_purchase," and "avg_pageviews_non_purchase"  in two consecutive months, June 2017 (201706) and July 2017 (201707).
- 
- **Engagement Patterns:** The higher average pageviews for purchasers suggest that users who are more engaged with the website's content are more likely to make a purchase. This could indicate a positive correlation between engagement and conversion.
- 
- **Behavioral Insights:** The data reflect different user behaviors. Users interested in making a purchase might spend more time exploring product details, reading reviews, and comparing options, leading to a higher number of pageviews.
- 
- **Conversion Optimization:** The business can leverage this data to optimize its website's design and content to encourage higher engagement among users likely to purchase. This could involve improving navigation, showcasing relevant products, and providing valuable content to guide users toward conversion.
+Non-purchasers view significantly more pages on average than purchasers, with an increase in pageviews from June to July. This indicates that they browse more but are less likely to convert.
 
 **6.5 Average number of transactions per user that purchased in July 2017**
 ~~~~sql
@@ -627,10 +602,4 @@ However, the add-to-cart rate and purchase rate are notably higher in March 2017
   
 ## 7. Conclusion
 
-- This is the author's opportunity to learn about the marketing industry and the customer journey through this e-commerce dataset
-
-- In analyzing the e-commerce dataset using BigQuery, the author understands customer behavior through the bounce rate, transaction, revenue, visit, and purchase.
-  
-- The author gained insights into which marketing channels drive traffic and sales by examining referral sources. Investing resources in effective channels and optimizing underperforming ones can improve marketing ROI.
-
-- In conclusion, exploring the e-commerce dataset on BigQuery unearthed a wealth of insights critical for strategic decision-making to help the business can optimize operations, enhance customer experiences, and drive revenue.
+Analyzing the eCommerce dataset using SQL in Google BigQuery provided valuable insights into customer behavior, including visits, pageviews, transactions, bounce rates, and revenue per traffic source. By examining referral sources, I identified key marketing channels driving traffic and sales, highlighting opportunities to optimize underperforming ones for better ROI. This project offered a deeper understanding of the customer journey and marketing effectiveness. The next step involves visualizing these insights using tools like Power BI or Tableau to enhance strategic decision-making, optimize operations, and drive revenue growth.
