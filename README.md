@@ -1,4 +1,4 @@
-# SQL_Ecommerce_Exploring
+# [SQL] E-commerce Exploring
 
 ## Table of Contents:
 1. [Introduction and Motivation](#data)
