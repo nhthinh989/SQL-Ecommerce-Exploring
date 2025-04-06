@@ -5,9 +5,8 @@
 2. [The goal of creating this project](#clean_data)
 3. [Import raw data](#cau3)
 4. [Read and explain dataset](#cau4)
-5. [ Data Processing & Exploratory Data Analysis](#cau5)
-6. [Ask questions and solve it](#cau6)
-7. [Conclusion](#cau7)
+5. [Ask questions and solve it](#cau5)
+6. [Conclusion](#cau6)
 
 <div id='data'/>
   
@@ -63,78 +62,8 @@ https://support.google.com/analytics/answer/3437719?hl=en
 
 <div id='cau5'/>
   
-## 5. Data Processing & Exploratory Data Analysis
-
-
-~~~~sql
-SELECT COUNT(fullVisitorId) row_num,
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201707*`
-~~~~
-
-| row_num |
-|---------|
-| 71812   |
-
-~~~~sql
-SELECT COUNT(fullVisitorId) row_num,
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`
-~~~~
-
-| row_num |
-|---------|
-| 467260  |
-
-~~~~sql
-SELECT EXTRACT(MONTH FROM PARSE_DATE("%Y%m%d",date)) month
-,COUNT(*) AS counts
-,ROUND((COUNT(*)/(SELECT COUNT(*) 
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`))*100,1) pct
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_2017*`
-GROUP BY EXTRACT(MONTH FROM PARSE_DATE("%Y%m%d",date))
-~~~~
-
-| month | counts | pct  |
-|-------|--------|------|
-| 6     | 63578  | 13.6 |
-| 3     | 69931  | 15.0 |
-| 8     | 2556   | 0.5  |
-| 2     | 62192  | 13.3 |
-| 4     | 67126  | 14.4 |
-| 1     | 64694  | 13.8 |
-| 7     | 71812  | 15.4 |
-| 5     | 65371  | 14.0 |
-
-
-
-**UNNEST hits and products**
-~~~~sql
-SELECT date, 
-fullVisitorId,
-eCommerceAction.action_type,
-product.v2ProductName,
-product.productRevenue,
-FROM `bigquery-public-data.google_analytics_sample.ga_sessions_201707*`,
-UNNEST(hits) AS hits,
-UNNEST(hits.product) as product
-~~~~
-
-| date     | fullVisitorId       | action_type | v2ProductName                         | productRevenue |
-|----------|---------------------|-------------|---------------------------------------|----------------|
-| 20170712 | 4080810487624198636 | 1           | YouTube Custom Decals                 |                |
-| 20170712 | 4080810487624198636 | 2           | YouTube Custom Decals                 |                |
-| 20170712 | 7291695423333449793 | 1           | Keyboard DOT Sticker                  |                |
-| 20170712 | 7291695423333449793 | 2           | Keyboard DOT Sticker                  |                |
-| 20170712 | 3153380067864919818 | 2           | Google Baby Essentials Set            |                |
-| 20170712 | 3153380067864919818 | 1           | Google Baby Essentials Set            |                |
-| 20170712 | 5615263059272956391 | 0           | Android Lunch Kit                     |                |
-| 20170712 | 5615263059272956391 | 0           | Android Rise 14 oz Mug                |                |
-| 20170712 | 5615263059272956391 | 0           | Android Sticker Sheet Ultra Removable |                |
-| 20170712 | 5615263059272956391 | 0           | Windup Android                        |                |
-
-<div id='cau6'/>
-  
-## 6. Ask questions and solve it
-**6.1 alculate total visit, pageview, transaction for Jan, Feb and March 2017**
+## 5. Ask questions and solve it
+**5.1 alculate total visit, pageview, transaction for Jan, Feb and March 2017**
 
 ~~~~sql
    SELECT 
@@ -156,7 +85,7 @@ UNNEST(hits.product) as product
 
 From January to March 2017, the eCommerce website saw steady growth in visits, pageviews, and transactions, with a significant surge in March. This suggests increased engagement, effective marketing, or seasonal influence. Further analysis of user behavior can optimize future strategies.
 
-**6.2 Bounce rate per traffic source in July 2017**
+**5.2 Bounce rate per traffic source in July 2017**
 ~~~~sql
 SELECT trafficSource.source
        ,COUNT(visitNumber) total_visits
@@ -269,7 +198,7 @@ ORDER BY total_visits DESC;
 
 Google drives the most traffic but has a bounce rate of 51.56%. Social media sources (YouTube 66.73%, Facebook 64.28%) show low retention, while Reddit (28.57%) attracts engaged users. Some sources indicate poor-quality traffic. It is necessary to optimize landing pages, refine SEO, invest in high-retention sources, and filter low-quality traffic.
 
-**6.3 Revenue by traffic source by week, by month in June 2017**
+**5.3 Revenue by traffic source by week, by month in June 2017**
 ~~~~sql
 WITH 
 month_data as(
@@ -356,7 +285,7 @@ ORDER BY time_type, revenue DESC;
 
 It can be seen that the two sources, Direct and Google, have the highest revenue during both the weekly and monthly periods.
 
-**6.4 Average number of pageviews by purchaser type**
+**5.4 Average number of pageviews by purchaser type**
 ~~~~sql
 WITH
 purchaser_data AS(
@@ -400,7 +329,7 @@ ORDER BY pd.month;
 
 Non-purchasers view significantly more pages on average than purchasers, with an increase in pageviews from June to July. This indicates that they browse more but are less likely to convert.
 
-**6.5 Average number of transactions per user that purchased in July 2017**
+**5.5 Average number of transactions per user that purchased in July 2017**
 ~~~~sql
 SELECT
     FORMAT_DATE("%Y%m",PARSE_DATE("%Y%m%d",date)) month,
@@ -419,7 +348,7 @@ GROUP BY month;
 The table shows the average total transactions per user in July. 
 This data suggests that, during July 2017, the typical user conducted about 4.16 transactions on average. This could be useful for understanding user behavior, tracking user engagement with your platform, or evaluating the effectiveness of marketing campaigns or promotions during that specific month.
 
-**6.6 Average amount of money spent per session. Only include purchaser data in 2017**
+**5.6 Average amount of money spent per session. Only include purchaser data in 2017**
 ~~~~sql
 
 WITH revenue_by_user AS (
@@ -450,7 +379,7 @@ ORDER BY month;
 The average total transactions per user for July 2017 is 43.86. This suggests that, on average, each user conducted approximately 44 transactions during that month. This could be an important metric for businesses to measure user engagement and activity.
 
 
-**6.7 Other products purchased by customers who purchased product” Youtube Men’s Vintage Henley” in July 2017**
+**5.7 Other products purchased by customers who purchased product” Youtube Men’s Vintage Henley” in July 2017**
 ~~~~sql
 WITH
 buyer_list AS(
@@ -532,7 +461,7 @@ ORDER BY quantity DESC;
 
 Overall, the data provides valuable insights into customer preferences, product popularity, and potential areas for marketing and merchandising strategies. Further analysis of historical data and integration with customer demographics could provide a more comprehensive understanding of these trends.
  
- **6.8 Calculate cohort map from product view to add_to_cart/number_product_view.**
+ **5.8 Calculate cohort map from product view to add_to_cart/number_product_view.**
  ~~~~sql
 WITH
 product_view AS(
@@ -597,9 +526,8 @@ Overall, the number of product views from January 2017 to March 2017 increased g
 
 However, the add-to-cart rate and purchase rate are notably higher in March 2017, suggesting potential improvements in the website's user experience or marketing efforts.
 
-
-<div id='cau7'/>
+<div id='cau6'/>
   
-## 7. Conclusion
+## 6. Conclusion
 
 Analyzing the eCommerce dataset using SQL in Google BigQuery provided valuable insights into customer behavior, including visits, pageviews, transactions, bounce rates, and revenue per traffic source. By examining referral sources, I identified key marketing channels driving traffic and sales, highlighting opportunities to optimize underperforming ones for better ROI. This project offered a deeper understanding of the customer journey and marketing effectiveness. The next step involves visualizing these insights using tools like Power BI or Tableau to enhance strategic decision-making, optimize operations, and drive revenue growth.
